@@ -1,0 +1,7 @@
+#!/bin/bash
+patchfile="$(find .build -name SSLContext.swift)"
+checksum="$(shasum --algorithm 1 "$patchfile" | awk '{print $NR}')"
+needspatch="508a7f621aadc54741d4b0e1c518cb286dc1ca88"
+if [[ "$checksum" =~ "$needspatch" ]]; then
+  (set -x; patch --force "$patchfile" ./patches/SSLContext.swift.patch)
+fi

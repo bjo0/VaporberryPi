@@ -1,0 +1,13 @@
+diff --git a/Sources/NIOOpenSSL/SSLContext.swift b/Sources/NIOOpenSSL/SSLContext.swift
+index 7e98032..1a85c4a 100644
+--- a/Sources/NIOOpenSSL/SSLContext.swift
++++ b/Sources/NIOOpenSSL/SSLContext.swift
+@@ -312,7 +312,7 @@ extension SSLContext {
+     
+     private static func addAdditionalChainCertificate(_ cert: OpenSSLCertificate, context: OpaquePointer) throws {
+         // This dup is necessary because the SSL_CTX_ctrl doesn't copy the X509 object itself.
+-        guard 1 == SSL_CTX_ctrl(.make(optional: context), SSL_CTRL_EXTRA_CHAIN_CERT, 0, .init(X509_dup(.make(optional: cert.ref)))) else {
++        guard 1 == SSL_CTX_ctrl(.make(optional: context), SSL_CTRL_EXTRA_CHAIN_CERT, 0, .init(UnsafeMutableRawPointer(X509_dup(.make(optional: cert.ref))))) else {
+             throw NIOOpenSSLError.failedToLoadCertificate
+         }
+     }
