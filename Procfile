@@ -6,6 +6,7 @@ basename="$(basename "$0")"
 )
 (  # Resolve package dependencies before we patch
   set -x
+  unset GIT_DIR GIT_WORK_TREE
   swift package resolve
 )
 find ./patches -name '*.patchscript' -exec {} \;  # Run all the patch scripts

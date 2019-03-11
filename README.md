@@ -14,7 +14,6 @@ This is a demo for getting Vapor running on a Raspberry Pi using swift 4.1.1 fro
 1. Clone a bare git repo, e.g. `sudo mkdir /git && sudo git clone --bare ssh://pi@raspberrypi.local/git/VaporberryPi.git /git/VaporberryPi.git && sudo chown -R pi:pi /git`
 1. Add a post-receive hook script to your bare git repo that runs when you push new code to it (see post-receive hook example in Appendix)
 1. Clone your bare git repo to create a working git repo, e.g. `git clone ssh://pi@localhost/git/VaporberryPi.git ~/VaporberryPi`
-	* Resolve and fetch SwiftPM dependencies, e.g.: `swift package resolve`
 
 ### Steps to do on your desktop computer
 1. Clone VaporberryPi from the bare repo on your Raspberry Pi, e.g. `git clone ssh://pi@raspberrypi.local/git/VaporberryPi.git`
@@ -47,11 +46,10 @@ $ ls -ld /git/VaporberryPi.git/hooks/post-receive
 $ cat /git/VaporberryPi.git/hooks/post-receive
 #!/bin/bash -e
 code_dir=~/VaporberryPi
-export GIT_WORK_TREE="$code_dir" GIT_DIR="$code_dir/.git"
 cd "$code_dir"
-git fetch --all origin master
-git reset --hard origin/master
-git clean --force
+git --git-dir "$code_dir/.git" --work-tree "$code_dir" fetch --all origin master
+git --git-dir "$code_dir/.git" --work-tree "$code_dir" reset --hard origin/master
+git --git-dir "$code_dir/.git" --work-tree "$code_dir" clean --force
 log=/tmp/"$(basename "$code_dir")"-post-receive.log
 ./Procfile | tee "$log"
 exit
